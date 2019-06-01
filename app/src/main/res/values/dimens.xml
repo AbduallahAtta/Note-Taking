@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_item_parent_margin_start">8dp</dimen>
+    <dimen name="list_item_parent_margin_top">8dp</dimen>
+    <dimen name="list_item_parent_margin_end">8dp</dimen>
+    <dimen name="list_item_title_margin_start">8dp</dimen>
+    <dimen name="list_item_title_margin_top">8dp</dimen>
+    <dimen name="list_item_title_margin_end">8dp</dimen>
+    <dimen name="list_item_description_margin_start">8dp</dimen>
+
+    <dimen name="list_item_priority_margin_start">8dp</dimen>
+    <dimen name="list_item_priority_margin_top">8dp</dimen>
+    <dimen name="list_item_priority_margin_end">8dp</dimen>
+    <dimen name="list_item_description_margin_bottom">8dp</dimen>
+</resources>

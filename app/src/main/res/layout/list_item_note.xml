@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="note"
+            type="elamien.abdullah.notetaking.database.Note" />
+    </data>
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/listItemNoteParent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/list_item_parent_margin_start"
+        android:layout_marginTop="@dimen/list_item_parent_margin_top"
+        android:layout_marginEnd="@dimen/list_item_parent_margin_end">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/listItemNoteTitle"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/list_item_title_margin_start"
+                android:layout_marginTop="@dimen/list_item_title_margin_top"
+                android:layout_marginEnd="@dimen/list_item_title_margin_end"
+                android:text="@{note.title}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_goneMarginStart="8dp" />
+
+            <TextView
+                android:id="@+id/listItemNoteDescription"
+                style="@style/TextAppearance.AppCompat.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/list_item_description_margin_start"
+                android:layout_marginBottom="@dimen/list_item_description_margin_bottom"
+                android:text="@{note.description}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/listItemNoteTitle" />
+
+            <TextView
+                android:id="@+id/listItemNotePriority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/list_item_priority_margin_start"
+                android:layout_marginTop="@dimen/list_item_priority_margin_top"
+                android:layout_marginEnd="@dimen/list_item_priority_margin_end"
+                android:background="@drawable/high_priority"
+                android:gravity="center"
+                android:text="@{Integer.toString(note.priority)}"
+                android:textColor="@color/primaryTextColor"
+                android:textStyle="italic"
+                app:layout_constraintBaseline_toBaselineOf="@+id/listItemNoteTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
