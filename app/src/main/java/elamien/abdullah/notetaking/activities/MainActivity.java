@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -66,8 +68,14 @@ public class MainActivity extends AppCompatActivity implements NotesAdapter.Note
     }
 
     private void setNotes(List<Note> notes) {
+        loadAnimation();
         mNotesAdapter = new NotesAdapter(notes, this, this);
         mMainBinding.notesRecyclerView.setAdapter(mNotesAdapter);
+    }
+
+    private void loadAnimation() {
+        LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.item_down_animator);
+        mMainBinding.notesRecyclerView.setLayoutAnimation(layoutAnimationController);
     }
 
     public void onAddNoteButtonClick(View view) {
