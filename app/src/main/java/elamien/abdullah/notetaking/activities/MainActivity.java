@@ -2,13 +2,18 @@ package elamien.abdullah.notetaking.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -23,12 +28,34 @@ public class MainActivity extends AppCompatActivity {
 
     private NotesViewModel mNotesViewModel;
     private ActivityMainBinding mMainBinding;
+    private NotesAdapter mNotesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mMainBinding.setHandlers(this);
+        loadNotes();
+        attachItemTouchHelper();
+    }
+
+    private void attachItemTouchHelper() {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT |
+                        ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                mNotesViewModel.deleteNote(mNotesAdapter.getNote(viewHolder.getAdapterPosition()));
+            }
+        }).attachToRecyclerView(mMainBinding.notesRecyclerView);
+    }
+
+    private void loadNotes() {
         mNotesViewModel = ViewModelProviders.of(this).get(NotesViewModel.class);
         mNotesViewModel.getmNotes().observe(this, new Observer<List<Note>>() {
             @Override
@@ -39,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNotes(List<Note> notes) {
-        NotesAdapter adapter = new NotesAdapter(notes, this);
-        mMainBinding.notesRecyclerView.setAdapter(adapter);
+        mNotesAdapter = new NotesAdapter(notes, this);
+        mMainBinding.notesRecyclerView.setAdapter(mNotesAdapter);
     }
 
     public void onAddNoteButtonClick(View view) {
@@ -62,5 +89,22 @@ public class MainActivity extends AppCompatActivity {
         int priority = data.getIntExtra(Constants.NOTE_PRIORITY_EXTRA_KEY, -1);
         Note note = new Note(title, description, priority);
         mNotesViewModel.insertNote(note);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.deleteAllNotesMenuItem:
+                mNotesViewModel.deleteAllNotes();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

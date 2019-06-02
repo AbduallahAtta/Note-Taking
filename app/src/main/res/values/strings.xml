@@ -3,4 +3,5 @@
     <string name="add_note_activity_label">Add Note</string>
     <string name="add_note_edit_text_title_hint">Title</string>
     <string name="add_note_edit_text_يثسؤقهحفهخى_hint">Description</string>
+    <string name="delete_all_notes_menu_item_label">Delete all notes</string>
 </resources>
