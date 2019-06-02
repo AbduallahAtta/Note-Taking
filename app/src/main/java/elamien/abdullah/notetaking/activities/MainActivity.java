@@ -24,7 +24,7 @@ import elamien.abdullah.notetaking.databinding.ActivityMainBinding;
 import elamien.abdullah.notetaking.utils.Constants;
 import elamien.abdullah.notetaking.viewmodel.NotesViewModel;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NotesAdapter.NoteClickListener {
 
     private NotesViewModel mNotesViewModel;
     private ActivityMainBinding mMainBinding;
@@ -66,21 +66,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNotes(List<Note> notes) {
-        mNotesAdapter = new NotesAdapter(notes, this);
+        mNotesAdapter = new NotesAdapter(notes, this, this);
         mMainBinding.notesRecyclerView.setAdapter(mNotesAdapter);
     }
 
     public void onAddNoteButtonClick(View view) {
         Intent intent = new Intent(this, AddNoteActivity.class);
-        startActivityForResult(intent, Constants.REQUEST_CODE);
+        startActivityForResult(intent, Constants.NEW_NOTE_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE) {
+        if (data != null && resultCode == RESULT_OK && requestCode == Constants.NEW_NOTE_REQUEST_CODE) {
             saveNote(data);
+        } else if (data != null && resultCode == RESULT_OK && requestCode == Constants.EDIT_NOTE_REQUEST_CODE) {
+            updateNote(data);
         }
+    }
+
+    private void updateNote(Intent data) {
+        String title = data.getStringExtra(Constants.NOTE_TITLE_EXTRA_KEY);
+        String description = data.getStringExtra(Constants.NOTE_DESCRIPTION_EXTRA_KEY);
+        int priority = data.getIntExtra(Constants.NOTE_PRIORITY_EXTRA_KEY, -1);
+        int id = data.getIntExtra(Constants.NOTE_ID_EXTRA_KEY, -1);
+        if (id == -1) {
+            return;
+        }
+
+        Note note = new Note(title, description, priority);
+        note.setId(id);
+        mNotesViewModel.updateNote(note);
     }
 
     private void saveNote(Intent data) {
@@ -106,5 +122,15 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onNoteClickListener(Note note) {
+        Intent intent = new Intent(this, AddNoteActivity.class);
+        intent.putExtra(Constants.NOTE_TITLE_EXTRA_KEY, note.getTitle());
+        intent.putExtra(Constants.NOTE_DESCRIPTION_EXTRA_KEY, note.getDescription());
+        intent.putExtra(Constants.NOTE_PRIORITY_EXTRA_KEY, note.getPriority());
+        intent.putExtra(Constants.NOTE_ID_EXTRA_KEY, note.getId());
+        startActivityForResult(intent, Constants.EDIT_NOTE_REQUEST_CODE);
     }
 }

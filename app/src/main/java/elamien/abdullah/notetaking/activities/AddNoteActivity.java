@@ -21,13 +21,25 @@ public class AddNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAddNoteBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_note);
-        setupActionBar();
+        if (getIntent() != null && getIntent().hasExtra(Constants.NOTE_ID_EXTRA_KEY)) {
+            loadNote();
+            setupActionBar(getString(R.string.edit_note_activity_label));
+        } else {
+            setupActionBar(getString(R.string.add_note_activity_label));
+        }
     }
 
-    private void setupActionBar() {
+
+    private void loadNote() {
+        mAddNoteBinding.noteTitleEditText.setText(getIntent().getStringExtra(Constants.NOTE_TITLE_EXTRA_KEY));
+        mAddNoteBinding.noteDescriptionEditText.setText(getIntent().getStringExtra(Constants.NOTE_DESCRIPTION_EXTRA_KEY));
+        mAddNoteBinding.notePriorityPicker.setValue(getIntent().getIntExtra(Constants.NOTE_PRIORITY_EXTRA_KEY, -1));
+    }
+
+    private void setupActionBar(String title) {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-            setTitle(getString(R.string.add_note_activity_label));
+            setTitle(title);
         }
     }
 
@@ -66,6 +78,12 @@ public class AddNoteActivity extends AppCompatActivity {
             return;
         }
         Intent data = new Intent();
+
+        int id = getIntent().getIntExtra(Constants.NOTE_ID_EXTRA_KEY, -1);
+
+        if (id != -1) {
+            data.putExtra(Constants.NOTE_ID_EXTRA_KEY, id);
+        }
         data.putExtra(Constants.NOTE_TITLE_EXTRA_KEY, title);
         data.putExtra(Constants.NOTE_DESCRIPTION_EXTRA_KEY, description);
         data.putExtra(Constants.NOTE_PRIORITY_EXTRA_KEY, priority);

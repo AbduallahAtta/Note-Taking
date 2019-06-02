@@ -2,6 +2,7 @@ package elamien.abdullah.notetaking.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -19,12 +20,14 @@ import elamien.abdullah.notetaking.databinding.ListItemNoteBinding;
  */
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHolder> {
 
+    NoteClickListener mClickListener;
     private List<Note> mNotes;
     private Context mContext;
 
-    public NotesAdapter(List<Note> mNotes, Context mContext) {
+    public NotesAdapter(List<Note> mNotes, Context mContext, NoteClickListener listener) {
         this.mNotes = mNotes;
         this.mContext = mContext;
+        this.mClickListener = listener;
     }
 
     @NonNull
@@ -66,12 +69,23 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         return mNotes == null ? 0 : mNotes.size();
     }
 
+
+    public interface NoteClickListener {
+        void onNoteClickListener(Note note);
+    }
+
     public class NotesViewHolder extends RecyclerView.ViewHolder {
         private ListItemNoteBinding dataBinding;
 
         public NotesViewHolder(@NonNull ListItemNoteBinding dataBinding) {
             super(dataBinding.getRoot());
             this.dataBinding = dataBinding;
+            dataBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mClickListener.onNoteClickListener(mNotes.get(getAdapterPosition()));
+                }
+            });
         }
 
         public void bind(Object note) {
