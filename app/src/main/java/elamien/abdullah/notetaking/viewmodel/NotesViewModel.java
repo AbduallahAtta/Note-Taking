@@ -25,7 +25,7 @@ public class NotesViewModel extends AndroidViewModel {
         mNotes = mNoteRepository.getNotes();
     }
 
-    public void insetNote(Note note) {
+    public void insertNote(Note note) {
         mNoteRepository.insetNote(note);
     }
 

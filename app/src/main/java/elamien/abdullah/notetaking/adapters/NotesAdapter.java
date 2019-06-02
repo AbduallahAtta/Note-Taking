@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -64,7 +63,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
     }
 
     public class NotesViewHolder extends RecyclerView.ViewHolder {
-        private ViewDataBinding mBinding;
         private ListItemNoteBinding dataBinding;
 
         public NotesViewHolder(@NonNull ListItemNoteBinding dataBinding) {
@@ -73,7 +71,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NotesViewHol
         }
 
         public void bind(Object note) {
-            //   mBinding.setVariable(BR.note, note);
             dataBinding.setNote((Note) note);
             dataBinding.executePendingBindings();
         }
